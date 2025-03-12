@@ -1,4 +1,3 @@
-# users.py
 from abc import ABC, abstractmethod
 import tkinter as tk
 from tkinter import scrolledtext
@@ -46,8 +45,6 @@ class Artist(ContentCreator):
         return f"Artist Bio: {self.description}"
 
 # Function to open user window
-# Function to open user window
-# Function to open user window
 def open_user_window(root, username):
     user_window = tk.Toplevel(root)
     user_window.title(f"User: {username}")
@@ -66,12 +63,17 @@ def open_user_window(root, username):
     text_area = scrolledtext.ScrolledText(user_window, width=50, height=10, font=("Arial", 10), bg="#1e222a", fg="white")
     text_area.pack(pady=10)
     
+    player = None
+    
     def play_song():
+        nonlocal player
         command = entry.get().strip().lower()
         if command.startswith("play song"):
             try:
                 song_index = int(command.split(" ")[-1]) - 1
                 if 0 <= song_index < len(admin.songs):
+                    if player:
+                        player.stop()
                     player = pygame.mixer.Sound(admin.songs[song_index])
                     player.play()
                     text_area.insert(tk.END, f"Playing {admin.songs[song_index]}...\n")
@@ -84,8 +86,10 @@ def open_user_window(root, username):
         entry.delete(0, tk.END)
     
     def stop_song():
-        pygame.mixer.stop()
-        text_area.insert(tk.END, "Music stopped.\n")
+        nonlocal player
+        if player:
+            player.stop()
+            text_area.insert(tk.END, "Music stopped.\n")
     
     play_button = tk.Button(user_window, text="Play Song", font=("Arial", 12), command=play_song, bg="#61afef", fg="black")
     play_button.pack(pady=5)
