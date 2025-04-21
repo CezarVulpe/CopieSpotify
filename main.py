@@ -1,4 +1,6 @@
 import tkinter as tk
+import threading
+from server import start_server
 from tkinter import scrolledtext
 from users import open_user_window, User
 from admin import Admin  # Assuming you move Admin to a separate file
