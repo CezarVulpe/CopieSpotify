@@ -1,8 +1,10 @@
 import socket
 from admin import Admin
-from users import open_user_window
+from users import open_user_window , User
+import tkinter as tk
+from tkinter import scrolledtext
 
-def start_server(root, text_area_admin, host='0.0.0.0', port=12345):
+def start_server(root, text_area_admin, host='192.168.18.138', port=12345):
     admin = Admin()
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

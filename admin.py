@@ -15,6 +15,7 @@ class Admin:
     
     def add_user(self, user):
         self.users.append(user)
+        print("s-a adaugat")
     
     def add_artist(self, artist):
         self.artists.append(artist)

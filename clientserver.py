@@ -1,31 +1,25 @@
 import socket
-import pygame
-import os
+import tkinter as tk
+from users import open_user_window, User
 
-def request_song(index, host="192.168.1.100", port=12345):  # IP-ul serverului
+def add_user(username, host="192.168.18.138", port=12345):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
-        s.send(f"request_song:{index}".encode())
+        s.send(f"add_user:{username}".encode())
 
-        response = s.recv(2)
-        if response != b"OK":
-            print("[CLIENT] Error: Server did not accept the request.")
-            return
+        response = s.recv(1024).decode()
+        print(f"[CLIENT] Server response: {response}")
 
-        with open("temp_song.mp3", "wb") as f:
-            while True:
-                chunk = s.recv(1024)
-                if not chunk:
-                    break
-                f.write(chunk)
+    return username  # Returnăm numele pentru fereastra locală
 
-        print("[CLIENT] Song received. Playing...")
+if __name__ == "__main__":
+    # Trimite cererea de adăugare la admin/server
+    username = add_user("aaa")
 
-        pygame.mixer.init()
-        pygame.mixer.music.load("temp_song.mp3")
-        pygame.mixer.music.play()
-        while pygame.mixer.music.get_busy():
-            continue
+    # Deschide fereastra locală pentru utilizator (client GUI)
+    root = tk.Tk()
+    root.withdraw()  # ascundem fereastra principală
 
-        print("[CLIENT] Done playing.")
-        os.remove("temp_song.mp3")
+    open_user_window(root, username, is_remote=True)
+
+    root.mainloop()
