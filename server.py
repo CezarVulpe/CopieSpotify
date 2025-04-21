@@ -1,8 +1,8 @@
 import socket
-import os
 from admin import Admin
+from users import open_user_window
 
-def start_server(host='0.0.0.0', port=12345):
+def start_server(root, text_area_admin, host='0.0.0.0', port=12345):
     admin = Admin()
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -12,28 +12,24 @@ def start_server(host='0.0.0.0', port=12345):
 
         while True:
             conn, addr = s.accept()
-            print(f"[SERVER] Connection from {addr}")
             with conn:
-                data = conn.recv(1024).decode()
-                print(f"[SERVER] Received: {data}")
+                try:
+                    data = conn.recv(1024).decode()
+                    print(f"[SERVER] Received: {data}")
 
-                if data.startswith("request_song:"):
-                    try:
-                        index = int(data.split(":")[1]) - 1
-                        if 0 <= index < len(admin.songs):
-                            song_path = admin.songs[index]
-                            if not os.path.isfile(song_path):
-                                conn.send(b"ERROR: File not found")
-                                continue
+                    if data.startswith("add_user:"):
+                        username = data.split(":", 1)[1]
+                        user = User(username, 25, "Unknown")
+                        admin.add_user(user)
 
-                            conn.send(b"OK")
-                            with open(song_path, "rb") as f:
-                                while chunk := f.read(1024):
-                                    conn.sendall(chunk)
-                            print("[SERVER] Transfer complete")
-                        else:
-                            conn.send(b"ERROR: Invalid index")
-                    except:
-                        conn.send(b"ERROR: Failed to parse index")
-                else:
-                    conn.send(b"ERROR: Unknown command")
+                        # Actualizare GUI (foloseste `after` pentru thread safety)
+                        if text_area_admin:
+                            text_area_admin.after(0, text_area_admin.insert, tk.END, f"[REMOTE] User '{username}' added.\n")
+                        if root:
+                            root.after(0, open_user_window, root, username)
+
+                        conn.send(f"User '{username}' added.".encode())
+                    else:
+                        conn.send(b"Invalid command.")
+                except Exception as e:
+                    conn.send(f"Error: {e}".encode())

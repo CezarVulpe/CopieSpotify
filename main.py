@@ -35,5 +35,7 @@ add_user_button.pack()
 text_area_admin = scrolledtext.ScrolledText(root, width=40, height=10)
 text_area_admin.pack(pady=10)
 
+threading.Thread(target=start_server, daemon=True, args=(root, text_area_admin)).start()
+
 # Run the app
 root.mainloop()
