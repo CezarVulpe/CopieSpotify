@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Panel</h1>
+
+        <input type="text" id="usernameInput" placeholder="Enter username">
+        <button onclick="addUser()">Add User</button>
+
+        <div id="logArea" class="log-area"></div>
+    </div>
+
+    <script>
+        async function addUser() {
+            const username = document.getElementById("usernameInput").value.trim();
+            if (!username) return;
+    
+            const response = await fetch("http://192.168.18.138:5000/add_user", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username })
+            });
+    
+            const result = await response.json();
+            const logArea = document.getElementById("logArea");
+            logArea.innerHTML += `<p>${result.message}</p>`;
+            document.getElementById("usernameInput").value = "";
+        }
+    </script>
+    
+</body>
+</html>
