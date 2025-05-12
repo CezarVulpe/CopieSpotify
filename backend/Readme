@@ -1,0 +1,53 @@
+## Caz de utilizare: Gestionarea utilizatorilor (înregistrare, autentificare, resetare parolă, editare profil)
+
+**Actor:** Utilizator obișnuit / Utilizator premium
+
+---
+
+### 📌 Flux de bază:
+
+1. Utilizatorul accesează interfața aplicației.  
+2. Selectează opțiunea **„Creare cont”** (sign up).  
+3. Completează un formular cu **username** și **parolă**.  
+4. Sistemul trimite datele către server pentru validare.  
+5. Serverul verifică disponibilitatea username-ului și formatul parolei.  
+6. Dacă datele sunt valide, se generează un **cod de confirmare unic**.  
+7. Codul este trimis către utilizator prin e-mail/SMS.  
+8. Utilizatorul primește confirmarea în aplicație și contul este activat.  
+9. Ulterior, utilizatorul accesează opțiunea **„Autentificare”** (sign in).  
+10. Introduce username și parolă sau codul primit.  
+11. Sistemul verifică datele în baza de date.  
+12. La validare cu succes, este redirecționat către pagina principală a aplicației.
+
+---
+
+### 🔁 Alternative la fluxul de bază:
+
+- Dacă **username-ul este deja utilizat**, sistemul afișează un mesaj de eroare.  
+- Dacă **parola nu respectă regulile de securitate**, sistemul solicită reformularea ei.  
+- Dacă utilizatorul **uită parola**:
+  - Selectează opțiunea **„Ai uitat parola?”**  
+  - Introduce username-ul  
+  - Primește **codul de resetare**  
+  - Introduce codul și setează o parolă nouă  
+- Dacă utilizatorul dorește să **editeze profilul**:
+  - Accesează pagina **„Profil”**  
+  - Modifică **username-ul** și/sau **parola**  
+  - Apasă pe **„Salvează”**, iar sistemul actualizează baza de date
+
+---
+
+### ✅ Precondiție:
+Utilizatorul trebuie să aibă acces la aplicație și o conexiune activă la internet.
+
+### 🎯 Postcondiție:
+Contul este creat, autentificarea este reușită sau datele de profil sunt actualizate.
+
+### 🖥️ Schița interfeței:
+- Formular de autentificare: username + parolă + buton „Login”
+- Formular de înregistrare: username + parolă + buton „Creare cont”
+- Pagina profil: câmpuri editabile + buton „Salvează”
+- Câmp pentru cod de confirmare (unde este cazul)
+
+### 🔒 Prioritate:
+**Critică** – Funcție esențială pentru accesul și utilizarea aplicației.
