@@ -292,7 +292,11 @@
 
     function searchArtist() {
       const query = document.getElementById('artistSearch').value;
-      document.getElementById('searchResults').textContent = `Rezultatele căutării pentru: ${query}`;
+      if (query === "bob") {
+      window.location.href = "bobartist.html";
+    } else {
+      document.getElementById('searchResults').textContent = `Nu s-a găsit artistul: ${query}`;
+    }
     }
 
     const playPauseBtn = document.getElementById("playPauseBtn");
