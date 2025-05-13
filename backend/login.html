@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Music Clone</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: #181818;
+      padding: 40px;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 0 10px #000;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #1db954;
+    }
+
+    .user-type-selector {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border: 1px solid #444;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .user-type-selector div {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #222;
+    }
+
+    .user-type-selector .selected {
+      background-color: #1db954;
+      font-weight: bold;
+    }
+
+    .login-container label {
+      display: block;
+      margin-bottom: 5px;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .login-container input[type="text"],
+    .login-container input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      background-color: #333;
+      color: white;
+    }
+
+    .green-btn {
+      background-color: #1db954;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .green-btn:hover {
+      background-color: #1ed760;
+    }
+
+    .error {
+      color: #ff4c4c;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Conectează-te</h2>
+
+    <div class="user-type-selector">
+      <div id="userOption" class="selected" onclick="selectUserType('user')">User</div>
+      <div id="artistOption" onclick="selectUserType('artist')">Artist</div>
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <label for="username">Nume utilizator</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="password">Parolă</label>
+      <input type="password" id="password" name="password" required>
+
+      <input type="hidden" id="userType" value="user">
+
+      <button type="submit" class="green-btn">Login</button>
+      <div class="error" id="errorMessage">Completează numele și parola.</div>
+    </form>
+  </div>
+
+  <script>
+    function selectUserType(type) {
+      document.getElementById("userType").value = type;
+
+      const userOption = document.getElementById("userOption");
+      const artistOption = document.getElementById("artistOption");
+
+      if (type === "user") {
+        userOption.classList.add("selected");
+        artistOption.classList.remove("selected");
+      } else {
+        artistOption.classList.add("selected");
+        userOption.classList.remove("selected");
+      }
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const error = document.getElementById("errorMessage");
+
+      if (username && password) {
+        window.location.href = "home.html";
+      } else {
+        error.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+def generate_artist_pages(artist_name: str):
+    artist_id = artist_name.lower().replace(" ", "")
+    public_filename = f"{artist_id}.html"
+    admin_filename = f"{artist_id}_admin.html"
+
+    # Pagina publică
+    public_html = f"""<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Artist - {artist_name}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    body {{
+      margin: 0;
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+    }}
+    .container {{
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      height: 100vh;
+      padding-bottom: 80px;
+    }}
+    .sidebar {{
+      background-color: #000;
+      padding: 20px;
+    }}
+    .sidebar h1 {{
+      color: #1db954;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }}
+    .nav-links {{
+      list-style: none;
+      padding-left: 0;
+    }}
+    .nav-links li {{
+      margin: 15px 0;
+    }}
+    .nav-links a {{
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+    }}
+    .nav-links a i {{
+      margin-right: 10px;
+    }}
+    .main-content {{
+      padding: 20px;
+      overflow-y: auto;
+    }}
+    header {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+    .green-btn {{
+      background-color: #1db954;
+      color: white;
+      padding: 10px 30px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+    }}
+    section {{
+      margin-top: 30px;
+    }}
+    h3 {{
+      margin-bottom: 10px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
+    }}
+    .events-list li {{
+      margin-bottom: 8px;
+    }}
+    .merch-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 20px;
+    }}
+    .merch-grid img {{
+      width: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+    }}
+    .songs-section {{
+      margin-top: 40px;
+    }}
+    .song-item {{
+      background: #181818;
+      border-radius: 5px;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+    .play-btn {{
+      background: #1db954;
+      border: none;
+      color: white;
+      padding: 6px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+    }}
+    .play-btn i {{
+      margin-right: 5px;
+    }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h1>Music Clone</h1>
+      <ul class="nav-links">
+        <li><a href="home.html"><i class="fas fa-home"></i>Acasă</a></li>
+        <li><a href="#"><i class="fas fa-search"></i>Căutare</a></li>
+        <li><a href="#"><i class="fas fa-user"></i>Profil {artist_name}</a></li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <header>
+        <h2>Artist: {artist_name}</h2>
+        <button class="green-btn">Urmărește</button>
+      </header>
+      <section>
+        <h3>Evenimente</h3>
+        <ul id="eventList" class="events-list">
+          <li>🎤 15 Mai 2025 – București</li>
+        </ul>
+      </section>
+      <section>
+        <h3>Merch</h3>
+        <div class="merch-grid" id="merchGrid">
+          <img src="merch1.jpeg" alt="Merch 1">
+          <img src="merch2.jpeg" alt="Merch 2">
+          <img src="merch3.jpeg" alt="Merch 3">
+        </div>
+      </section>
+      <section class="songs-section">
+        <h3>Melodii</h3>
+        <div class="song-item"><span>1. Godfather_HipHop.mp3</span><button class="play-btn" onclick="playSong(0)"><i class="fas fa-play"></i>Play</button></div>
+        <div class="song-item"><span>2. The New Orleans Tango.mp3</span><button class="play-btn" onclick="playSong(1)"><i class="fas fa-play"></i>Play</button></div>
+        <div class="song-item"><span>3. L'altra dimensione.mp3</span><button class="play-btn" onclick="playSong(2)"><i class="fas fa-play"></i>Play</button></div>
+      </section>
+    </div>
+  </div>
+  <script>
+    async function playSong(index) {{
+      try {{
+        const response = await fetch("http://localhost:5000/play", {{
+          method: "POST",
+          headers: {{ "Content-Type": "application/json" }},
+          body: JSON.stringify({{ song_index: index }})
+        }});
+        const result = await response.json();
+        alert(result.message);
+      }} catch (e) {{
+        alert("Eroare: " + e);
+      }}
+    }}
+  </script>
+</body>
+</html>"""
+
+    # Pagina admin = copie cu header fără buton + secțiune de editare
+    admin_html = public_html.replace(
+        '<button class="green-btn">Urmărește</button>', ''
+    ).replace(
+        '</section>\n      <section class="songs-section">',
+        """</section>
+      <section class="admin-tools">
+        <h3>Administrare Evenimente</h3>
+        <input type="text" id="eventInput" placeholder="Ex: 20 Iunie - Timișoara" />
+        <button onclick="addEvent()">Adaugă</button>
+        <button onclick="removeEvent()">Șterge ultimul</button>
+
+        <h3 style="margin-top:20px;">Administrare Merch</h3>
+        <input type="text" id="merchInput" placeholder="Link imagine .jpeg" />
+        <button onclick="addMerch()">Adaugă</button>
+        <button onclick="removeMerch()">Șterge ultimul</button>
+      </section>
+      <section class="songs-section">"""
+    ) + """
+<script>
+  function addEvent() {
+    const input = document.getElementById("eventInput");
+    const list = document.getElementById("eventList");
+    if (input && list && input.value.trim()) {
+      const li = document.createElement("li");
+      li.textContent = input.value;
+      list.appendChild(li);
+      input.value = "";
+    }
+  }
+  function removeEvent() {
+    const list = document.getElementById("eventList");
+    if (list && list.lastChild) {
+      list.removeChild(list.lastChild);
+    }
+  }
+  function addMerch() {
+    const input = document.getElementById("merchInput");
+    const grid = document.getElementById("merchGrid");
+    if (input && grid && input.value.trim()) {
+      const img = document.createElement("img");
+      img.src = input.value;
+      img.alt = "Merch custom";
+      grid.appendChild(img);
+      input.value = "";
+    }
+  }
+  function removeMerch() {
+    const grid = document.getElementById("merchGrid");
+    if (grid && grid.lastChild) {
+      grid.removeChild(grid.lastChild);
+    }
+  }
+</script>
+"""
+
+    with open(public_filename, "w", encoding="utf-8") as f:
+        f.write(public_html)
+
+    with open(admin_filename, "w", encoding="utf-8") as f:
+        f.write(admin_html)
+
+    return public_filename, admin_filename
+
+generate_artist_pages("bbb")
